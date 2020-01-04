@@ -148,7 +148,7 @@ int main(int argc, char** argv){
     // kreira se prozor
     glutInitWindowSize(700, 500);
     glutInitWindowPosition(300, 300);
-    glutCreateWindow("Sibicarenje");
+    glutCreateWindow("Izaberi pravu solju");
     
     // registrovanje callback funkcija
     glutDisplayFunc(on_display);
