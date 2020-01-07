@@ -13,6 +13,12 @@ int Z = 3;
 //duzina stola
 const double duzina = 3.0;
 
+//inicijalizujemo pocetne vrednosti za polozaje solja
+
+static float a1=0.0, a2=0.0, a3=0.0;
+static float b1=0.0, b2=2.5, b3=0.0;
+static float c1=0.0, c2=-2.5, c3=0.0;
+
 void sto(){
    
     //materijal stola
@@ -73,6 +79,130 @@ void sto(){
 
 }
 
+void covek(){
+	glPushMatrix();
+	    //materijal stola
+    GLfloat ambijent_coveka[] = { 0.4, 0.4, 0.8, 1};
+    GLfloat difuznost_coveka[] = { 0.3, 0.06, 0.3, 1 };
+    GLfloat spekularnost_coveka[] = { 0.06, 0.07, 0, 1 };
+    GLfloat osvetljenje_coveka = 0.2;
+    
+    //postavljanje materijala coveka
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambijent_coveka);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, difuznost_coveka);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, spekularnost_coveka);
+    glMaterialf(GL_FRONT, GL_SHININESS, osvetljenje_coveka);
+  
+	
+	//glColor3f(0.25,0,0.5);
+	//glava
+	    glPushMatrix();
+     glColor3f(0.843, 0.424, 0.357);
+    glTranslatef(2.5,-5.5,3);
+	glutSolidSphere(0.7, 10, 200);
+	glPopMatrix();
+	//telo
+	 glPushMatrix();
+	  glColor3f(0,0,0.2);
+	 glTranslatef(2.5,-5.5,1);
+	 glScalef(0.5,0.5,1);
+	glutSolidCube(2.5);
+	glPopMatrix();
+	
+	//ruke
+	//gornji deo ruke
+	 glPushMatrix();
+	 glColor3f(0.843, 0.424, 0.357);
+	 glTranslatef(2.5,-4.2,1.9);
+	 glRotatef(25,1,0,0);
+	 glScalef(0.5,0.53,1.1);
+	glutSolidCube(1);
+	glPopMatrix();
+	
+	//donji deo ruke
+	glPushMatrix();
+	 glColor3f(0.843, 0.424, 0.357);
+	 glTranslatef(2.5,-3.77,1); 
+	 glRotatef(25,1,0,0);
+	 glScalef(0.5,0.53,1.1);
+	glutSolidCube(1);
+	glPopMatrix();
+	
+    
+     glPushMatrix();
+	 glColor3f(0.843, 0.424, 0.357);
+	 glTranslatef(2.5,-7.05,1.5);
+	 glRotatef(-25,1,0,0);
+	 glScalef(0.5,0.5,2);
+	glutSolidCube(1);
+	glPopMatrix();
+    
+    //noge
+    glPushMatrix();
+	 glColor3f(0.843, 0.424, 0.357);
+	 glTranslatef(2.5,-6.10,-1.3);
+	 glScalef(0.40,0.40,2.1);
+	glutSolidCube(1);
+	glPopMatrix();
+	
+	 
+    glPushMatrix();
+	 glColor3f(0.843, 0.424, 0.357);
+	 glTranslatef(2.5,-5.10,-1.3);
+	 glScalef(0.40,0.40,2.1);
+	glutSolidCube(1);
+	glPopMatrix();
+	
+	
+	glPopMatrix();
+	}
+	
+	//solja
+
+void solja(){
+	
+	GLUquadricObj* quadratic = gluNewQuadric();
+    gluCylinder(quadratic, 0.35, 0.6, 1.3, 32, 32);
+    glPushMatrix();
+    glTranslatef(0,-0.77,1);
+    glRotatef(90,0,1,0);
+    glScalef(0.2,0.2,0.2);
+    glutSolidTorus(0.4, 0.8, 10, 50);
+    glPopMatrix();
+    
+    
+	}	
+
+
+
+
+//soljice :)
+void solje_u_startnoj_poziciji(){
+	glPushMatrix();
+	glTranslatef(1,0,0);
+	
+	//srednja
+	glPushMatrix();
+	glColor3f(0,0,0.2);
+	glTranslatef(a1,a2,a3);
+	solja();
+	glPopMatrix();
+	
+	//desna
+	glPushMatrix();
+	glTranslatef(b1,b2,b3);
+	solja();
+	glPopMatrix();
+	
+	//leva
+	glPushMatrix();
+	glTranslatef(c1,c2,c3);
+	solja();
+	glPopMatrix();
+	glPopMatrix();
+}
+	
+
 
 static void on_display(void){
 
@@ -116,6 +246,11 @@ static void on_display(void){
     //pravi se sto
     sto();
     
+    //pravi se covek
+    covek();
+    
+    //prve se solje
+    solje_u_startnoj_poziciji();
     // nova slika se salje na ekran
     glutSwapBuffers();
 }
