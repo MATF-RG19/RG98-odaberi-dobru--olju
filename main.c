@@ -1,14 +1,48 @@
 #include <GL/glut.h>
+#include <math.h>
+#include <stdio.h>
+#include <time.h>
+
 
 #define ESC 27
 
+
+
+//poromenjiva koja oznacava pocetak kreteanja vode kad loptica upadne u nju
+int talasanje=0;
+//parametar pomeranja
+static float t=0.0; 
+
+static int animation_ongoing=0;
+
+static float padanje_loptica=0;
+static float pocinje_pad=0;
+
 // dimenzije prozora
 static int window_width, window_height;
+
+
+#define U_FROM -50
+#define V_FROM -50
+#define U_TO 50
+#define V_TO 50
+
+
+#define PI 3.1415926535
+#define EPSILON 0.01
+
+/* Definisemo osobine tajmera */
+#define TIMER_INTERVAL 5
+#define TIMER_ID 0
+
+/* Definisemo makro koji vraca maksimalnu vrednost */
+#define max(A, B) (((A) > (B)) ? (A) : (B))
 
 // pocetne koordinate pozicije kamere
 int X = 10;
 int Y = 5;
 int Z = 3;
+int i=3;
 
 //duzina stola
 const double duzina = 3.0;
@@ -18,6 +52,113 @@ const double duzina = 3.0;
 static float a1=0.0, a2=0.0, a3=0.0;
 static float b1=0.0, b2=2.5, b3=0.0;
 static float c1=0.0, c2=-2.5, c3=0.0;
+
+
+
+
+//tajmer za padanje loptice i talasanje vode
+
+static void on_timer(int value)
+{
+  if(value>=9){pocinje_pad=1;}
+  else{
+  Y=Y-1;
+  X=X-1;
+ 
+  i++;
+   glutPostRedisplay();
+}
+if(pocinje_pad){
+	padanje_loptica++;
+	glutPostRedisplay();
+	}
+if(padanje_loptica==9){
+	pocinje_pad=0;
+	padanje_loptica=100;
+	talasanje=1;
+	}	
+
+   if(talasanje){
+	   t += 400;
+
+    /* Forsira se ponovno iscrtavanje prozora. */
+    glutPostRedisplay();
+	   }
+   
+   if(animation_ongoing){
+		glutTimerFunc(20, on_timer, i);
+		}
+  /* else{
+	   
+	   glutTimerFunc(TIMER_INTERVAL, on_timer_voda, TIMER_ID);
+}*/
+    
+}
+
+//dodate funkcije za vodu
+
+
+float function(float u, float v){
+	if(talasanje){
+	float parameter = (u*u + v*v +t) / 300 ;
+	return  3.5*sin(parameter) * exp(2 - parameter/10);
+}
+	else{
+	return 0;
+}
+}	
+
+
+void set_vertex_and_normal(float u, float v)
+{
+    float diff_u, diff_v;
+
+    /* Racunamo priblizne vrednosti izvoda funkcije u tacki u, v */
+    diff_u = (function(u + 1, v)
+             - function(u - 1, v)) / 2.0;
+    diff_v = (function(u, v + 1)
+             - function(u, v - 1)) / 2.0;
+
+    /* Postavljamo normalu - vektor normalan na tangentnu ravan */
+    /* Racuna se priblizan vektor normale: */
+    glNormal3f(-diff_u, 1, -diff_v);
+
+    /* Racuna se priblizan vektor normale.
+     * Primenom sinusa se postize efekat presijavanja
+     */
+    /* glNormal3f(sin(-diff_u), 1, sin(-diff_v)); */
+
+    /* Postavljamo verteks */
+    glVertex3f(u, function(u, v), v);
+
+
+}
+
+/* Crtamo funkciju */
+void plot_function()
+{
+    float scale;
+    int u, v;
+
+    glPushMatrix();
+    
+    /* Racunamo faktor skaliranja tako da cela funkcija bude prikazana */
+    scale = 2.0 / max( U_TO - U_FROM, V_TO - V_FROM );
+    glScalef(scale, scale, scale);
+  
+    /* Crtamo funkciju strip po strip */
+    for (u = U_FROM; u < U_TO; u++) {
+        glBegin(GL_TRIANGLE_STRIP);
+        for (v = U_FROM; v <= U_TO; v++) {
+            set_vertex_and_normal(u, v);
+            set_vertex_and_normal(u + 1, v);
+        }
+        glEnd();
+    }
+
+    glPopMatrix();
+}
+
 
 void sto(){
    
@@ -96,66 +237,92 @@ void covek(){
 	
 	//glColor3f(0.25,0,0.5);
 	//glava
-	    glPushMatrix();
-     glColor3f(0.843, 0.424, 0.357);
+	glPushMatrix();
+	glColor3f(0.843, 0.424, 0.357);
     glTranslatef(2.5,-5.5,3);
 	glutSolidSphere(0.7, 10, 200);
 	glPopMatrix();
 	//telo
-	 glPushMatrix();
-	  glColor3f(0,0,0.2);
-	 glTranslatef(2.5,-5.5,1);
-	 glScalef(0.5,0.5,1);
+	glPushMatrix();
+	glColor3f(0,0,0.2);
+	glTranslatef(2.5,-5.5,1);
+	glScalef(0.5,0.5,1);
 	glutSolidCube(2.5);
 	glPopMatrix();
 	
 	//ruke
 	//gornji deo ruke
-	 glPushMatrix();
-	 glColor3f(0.843, 0.424, 0.357);
-	 glTranslatef(2.5,-4.2,1.9);
-	 glRotatef(25,1,0,0);
-	 glScalef(0.5,0.53,1.1);
+	glPushMatrix();
+	glColor3f(0.843, 0.424, 0.357);
+	glTranslatef(2.5,-4.2,1.9);
+	glRotatef(25,1,0,0);
+	glScalef(0.5,0.53,1.1);
 	glutSolidCube(1);
 	glPopMatrix();
 	
 	//donji deo ruke
 	glPushMatrix();
-	 glColor3f(0.843, 0.424, 0.357);
-	 glTranslatef(2.5,-3.77,1); 
-	 glRotatef(25,1,0,0);
-	 glScalef(0.5,0.53,1.1);
+	glColor3f(0.843, 0.424, 0.357);
+	glTranslatef(2.5,-3.77,1); 
+	glRotatef(25,1,0,0);
+	glScalef(0.5,0.53,1.1);
 	glutSolidCube(1);
 	glPopMatrix();
 	
     
-     glPushMatrix();
-	 glColor3f(0.843, 0.424, 0.357);
-	 glTranslatef(2.5,-7.05,1.5);
-	 glRotatef(-25,1,0,0);
-	 glScalef(0.5,0.5,2);
+	glPushMatrix();
+	glColor3f(0.843, 0.424, 0.357);
+	glTranslatef(2.5,-7.05,1.5);
+	glRotatef(-25,1,0,0);
+	glScalef(0.5,0.5,2);
 	glutSolidCube(1);
 	glPopMatrix();
     
     //noge
     glPushMatrix();
-	 glColor3f(0.843, 0.424, 0.357);
-	 glTranslatef(2.5,-6.10,-1.3);
-	 glScalef(0.40,0.40,2.1);
+	glColor3f(0.843, 0.424, 0.357);
+	glTranslatef(2.5,-6.10,-1.3);
+	glScalef(0.40,0.40,2.1);
 	glutSolidCube(1);
 	glPopMatrix();
 	
 	 
     glPushMatrix();
-	 glColor3f(0.843, 0.424, 0.357);
-	 glTranslatef(2.5,-5.10,-1.3);
-	 glScalef(0.40,0.40,2.1);
+	glColor3f(0.843, 0.424, 0.357);
+	glTranslatef(2.5,-5.10,-1.3);
+	glScalef(0.40,0.40,2.1);
 	glutSolidCube(1);
 	glPopMatrix();
 	
 	
 	glPopMatrix();
 	}
+	
+	
+	//loptica
+void loptice(){
+	glPushMatrix();
+	glColor3f(0.5,0,0);
+	glTranslatef(0.75,-2.5,10);
+	glutSolidSphere(0.2, 30, 30);
+	glPopMatrix();	
+	
+	
+	glPushMatrix();
+	glColor3f(0.909, 0.58, 0.79);
+	glTranslatef(0.75,0,10);
+	glutSolidSphere(0.2, 30, 30);
+	glPopMatrix();	
+	
+	
+	glPushMatrix();
+	glColor3f(0.5,0,0);
+	glTranslatef(0.75,2.5,10);
+	glutSolidSphere(0.2, 30, 30);
+	glPopMatrix();	
+	
+	}	
+	
 	
 	//solja
 
@@ -171,6 +338,29 @@ void solja(){
     glPopMatrix();
     
     
+    
+    
+    //dodatna povrasina ispod talasa koja daje ovu kul zalakenstu boju
+     glPushMatrix();	     
+     
+    glTranslatef(0,0.0,1.2);
+	glRotatef(90,1,0,0);
+    glScalef(0.25,0.55,0.3);
+    glColor3f(0, 0.7, 0.98);
+    glutSolidSphere(2, 2,30);
+    glPopMatrix();
+    
+    
+    
+    
+    //voda
+    glPushMatrix();
+    glTranslatef(0,0,1.2);
+	glScalef(0.32,0.32,0.32);
+	glRotatef(90,1,0,0);
+    glColor3f(0,0.03,0.2);
+	plot_function();
+    glPopMatrix();
 	}	
 
 
@@ -252,6 +442,11 @@ static void on_display(void){
     //prve se solje
     solje_u_startnoj_poziciji();
     // nova slika se salje na ekran
+    
+    glPushMatrix();
+   glTranslatef(0,0,-padanje_loptica);
+     loptice();
+   glPopMatrix();
     glutSwapBuffers();
 }
 
@@ -263,7 +458,17 @@ static void on_keyboard(unsigned char key, int x, int y){
         case ESC:
             exit(0);
             break;
-      
+		
+		case 'g':
+		   if (!animation_ongoing) {
+			glutTimerFunc(20, on_timer, i);
+            animation_ongoing = 1;
+				}
+			break;	
+		case 'p':
+		animation_ongoing=0;
+				
+		break;
     }
 }
 
@@ -301,3 +506,4 @@ int main(int argc, char** argv){
     return 0;
     
 }
+
