@@ -53,8 +53,481 @@ static float a1=0.0, a2=0.0, a3=0.0;
 static float b1=0.0, b2=2.5, b3=0.0;
 static float c1=0.0, c2=-2.5, c3=0.0;
 
+//vrednosti y kordinate pre kretanja
+static float apoc=0.0, bpoc=2.5, cpoc=-2.5;
+// koeficijent kretanja
+static float pom=0.5;
+
+//promenljiva koja odlucuje koja ce se zamena solja desiti
+int prom_odlucivanja=1;
+
+//promenjiva koja okrece promenljivu odlucivanja
+int moze=1;
+
+//promaenjiva koja predstavlja moguci broj rotacija
+int broj_rotacija=10;
 
 
+
+
+
+
+//kretanje solja
+//0-zamena prve i druge solje
+//1-zamena druge i trece solje
+//2-zamena prve i trece solje
+void pokret(int prom_odlucivanja){
+	
+	
+	
+	//obrce se prve i druga
+	if(prom_odlucivanja==0){
+		moze=0;
+		//1
+		//c a b
+		if(apoc==0 && bpoc==2.5 && cpoc==-2.5){
+			if(c1!=1.5 && c2==-2.5){
+			c1+=pom;
+			a1-=pom;
+		}else if(c2!=0 && c1==1.5 ){
+		    c2+=pom;
+		    a2-=pom;
+		}else if(c1!=0 && c2==0){
+			c1-=pom;
+			a1+=pom;		
+		}else{
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			//ovaj return sprecava da funkcija udje u neko naredno if dole vec je vraca nazad na rando
+			return;
+				}
+		
+	   }
+	   
+	   //2
+	   //a c b
+	   if(apoc==-2.5 && bpoc==2.5 && cpoc==0){
+		  
+			if(a1<1.5 && a2==-2.5){
+			a1+=pom;
+			c1-=pom;
+		}else if(a2<0 && a1==1.5 ){
+		    a2+=pom;
+		    c2-=pom;
+		}else if(a1>0 && a2==0){
+			a1-=pom;
+			c1+=pom;		
+		}else{
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	   //3
+	   //b a c
+	   if(apoc==0 && bpoc==-2.5 && cpoc==2.5){
+			if(b1<1.5 && b2==-2.5){
+			b1+=pom;
+			a1-=pom;
+		}else if(b2<0 && b1==1.5 ){
+		    b2+=pom;
+		    a2-=pom;
+		}else if(b1>0 && b2==0){
+			b1-=pom;
+			a1+=pom;		
+		}else{
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+		//4
+	     //b c a
+	   if(apoc==2.5 && bpoc==-2.5 && cpoc==0){
+			if(b1<1.5 && b2==-2.5){
+			b1+=pom;
+			c1-=pom;
+		}else if(b2<0 && b1==1.5 ){
+		    b2+=pom;
+		    c2-=pom;
+		}else if(b1>0 && b2==0){
+			b1-=pom;
+			c1+=pom;		
+		}else{
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	   
+	   //5
+	   //a b c
+	   if(apoc==-2.5 && bpoc==0 && cpoc==2.5){
+		  
+			if(a1<1.5 && a2==-2.5){
+			a1+=pom;
+			b1-=pom;
+		}else if(a2<0 && a1==1.5 ){
+		    a2+=pom;
+		    b2-=pom;
+		}else if(a1>0 && a2==0){
+			a1-=pom;
+			b1+=pom;		
+		}else{	
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	   
+		//6
+		//c b a
+		if(apoc==2.5 && bpoc==0 && cpoc==-2.5){
+			if(c1<1.5 && c2==-2.5){
+			c1+=pom;
+			b1-=pom;
+		}else if(c2<0 && c1==1.5 ){
+		    c2+=pom;
+		    b2-=pom;
+		}else if(c1>0 && c2==0){
+			c1-=pom;
+			b1+=pom;		
+		}else{	
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	   
+	}
+	
+	
+	
+	//okretanje druge i trece
+	if(prom_odlucivanja==1){
+		moze=0;
+	    //1
+		//c a b
+		if(apoc==0 && bpoc==2.5 && cpoc==-2.5){
+			if(b1<1.5 && b2==2.5){
+			b1+=pom;
+			a1-=pom;
+		}else if(b2>0 && b1==1.5 ){
+		    b2-=pom;
+		    a2+=pom;
+		}else if(b1>0 && b2==0){
+			b1-=pom;
+			a1+=pom;		
+		}else{
+			moze=1;
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   //2
+	   //c b a
+	   if(apoc==2.5 && bpoc==0 && cpoc==-2.5){
+			if(a1<1.5 && a2==2.5){
+			a1+=pom;
+			b1-=pom;
+		}else if(a2>0 && a1==1.5 ){
+		    a2-=pom;
+		    b2+=pom;
+		}else if(a1>0 && a2==0){
+			a1-=pom;
+			b1+=pom;		
+		}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	     //3
+	   	//b a c
+		if(apoc==0 && bpoc==-2.5 && cpoc==2.5){
+			if(c1<1.5 && c2==2.5){
+			c1+=pom;
+			a1-=pom;
+		}else if(c2>0 && c1==1.5 ){
+		    c2-=pom;
+		    a2+=pom;
+		}else if(c1>0 && c2==0){
+			c1-=pom;
+			a1+=pom;		
+		}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	   
+	   
+	     //4
+		//a b c
+		if(apoc==-2.5 && bpoc==0 && cpoc==2.5){
+			if(c1<1.5 && c2==2.5){
+			c1+=pom;
+			b1-=pom;
+		}else if(c2>0 && c1==1.5 ){
+		    c2-=pom;
+		    b2+=pom;
+		}else if(c1>0 && c2==0){
+			c1-=pom;
+			b1+=pom;		
+		}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	   //5
+	   //a c b
+		if(apoc==-2.5 && bpoc==2.5 && cpoc==0){
+			if(b1<1.5 && b2==2.5){
+			b1+=pom;
+			c1-=pom;
+		}else if(b2>0 && b1==1.5 ){
+		    b2-=pom;
+		    c2+=pom;
+		}else if(b1>0 && b2==0){
+			b1-=pom;
+			c1+=pom;		
+		}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	   	//6
+	   // c b a
+	   if(apoc==2.5 && bpoc==-2.5 && cpoc==0){
+		  
+			if(a1<1.5 && a2==2.5){
+			a1+=pom;
+			c1-=pom;
+		}else if(a2>0 && a1==1.5 ){
+		    a2-=pom;
+		    c2+=pom;
+		}else if(a1>0 && a2==0){
+			a1-=pom;
+			c1+=pom;		
+		}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   
+	   
+	   
+	}
+	
+	
+	
+	//okretanje prve i trece
+	if(prom_odlucivanja==2){
+		moze=0;
+		//1
+		//c a b
+		if(apoc==0 && bpoc==2.5 && cpoc==-2.5){
+			if(b1<1.5 && b2==2.5){
+			b1+=pom;
+			c1-=pom;
+		}else if(b2>-2.5 && b1==1.5 ){
+		    b2-=pom;
+		    c2+=pom;
+		}else if(b1>0 && b2==-2.5){
+			b1-=pom;
+			c1+=pom;		
+		}else{
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	   //2
+	   //b a c
+	   if(apoc==0 && bpoc==-2.5 && cpoc==2.5){
+		  
+			if(c1<1.5 && c2==2.5){
+			c1+=pom;
+			b1-=pom;
+		}else if(c2>-2.5 && c1==1.5 ){
+		    c2-=pom;
+		    b2+=pom;
+		}else if(c1>0 && c2==-2.5){
+			c1-=pom;
+			b1+=pom;		
+		}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	
+	
+	
+		//3
+		//c b a
+		if(apoc==2.5 && bpoc==0 && cpoc==-2.5){
+			if(a1<1.5 && a2==2.5){
+			a1+=pom;
+			c1-=pom;
+		}else if(a2>-2.5 && a1==1.5 ){
+		    a2-=pom;
+		    c2+=pom;
+		}else if(a1>0 && a2==-2.5){
+			a1-=pom;
+			c1+=pom;		
+		}else {				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	
+	
+		//4
+		//b c a
+		if(apoc==2.5 && bpoc==-2.5 && cpoc==0){
+			if(a1<1.5 && a2==2.5){
+			a1+=pom;
+			b1-=pom;
+		}else if(a2>-2.5 && a1==1.5 ){
+		    a2-=pom;
+		    b2+=pom;
+		}else if(a1>0 && a2==-2.5){
+			a1-=pom;
+			b1+=pom;		
+		}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	       //5
+			//a c b
+		if(apoc==-2.5 && bpoc==2.5 && cpoc==0){
+			if(b1<1.5 && b2==2.5){
+			b1+=pom;
+			a1-=pom;
+		}else if(b2>-2.5 && b1==1.5 ){
+		    b2-=pom;
+		    a2+=pom;
+		}else if(b1>0 && b2==-2.5){
+			b1-=pom;
+			a1+=pom;		
+			}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	
+		//6
+	   //a b c
+	   if(apoc==-2.5 && bpoc==0 && cpoc==2.5){
+		  
+			if(c1<1.5 && c2==2.5){
+			c1+=pom;
+			a1-=pom;
+		}else if(c2>-2.5 && c1==1.5 ){
+		    c2-=pom;
+		    a2+=pom;
+		}else if(c1>0 && c2==-2.5){
+			c1-=pom;
+			a1+=pom;		
+			}else{				
+			apoc=a2;
+			bpoc=b2;
+			cpoc=c2;
+			moze=1;
+			broj_rotacija--;
+			return;
+				}
+		
+	   }
+	
+}
+	 
+	}
+	
 
 //tajmer za padanje loptice i talasanje vode
 
@@ -62,16 +535,17 @@ static void on_timer(int value)
 {
   if(value>=9){pocinje_pad=1;}
   else{
-  Y=Y-1;
-  X=X-1;
- 
-  i++;
-   glutPostRedisplay();
-}
+	Y=Y-1;
+	X=X-1;
+	i++;
+	glutPostRedisplay();
+	}
+	
 if(pocinje_pad){
 	padanje_loptica++;
 	glutPostRedisplay();
 	}
+	
 if(padanje_loptica==9){
 	pocinje_pad=0;
 	padanje_loptica=100;
@@ -84,16 +558,30 @@ if(padanje_loptica==9){
     /* Forsira se ponovno iscrtavanje prozora. */
     glutPostRedisplay();
 	   }
+	   
+	   
+	if(t>=1500 && broj_rotacija){
+		
+		
+		if(moze){
+			srand(time(NULL));
+			prom_odlucivanja=rand()%3;
+		}
+		pokret(prom_odlucivanja);
+		
+		glutPostRedisplay();
+		
+		}   
    
    if(animation_ongoing){
 		glutTimerFunc(20, on_timer, i);
 		}
-  /* else{
-	   
-	   glutTimerFunc(TIMER_INTERVAL, on_timer_voda, TIMER_ID);
-}*/
+
     
 }
+
+	
+
 
 //dodate funkcije za vodu
 
@@ -467,8 +955,8 @@ static void on_keyboard(unsigned char key, int x, int y){
 			break;	
 		case 'p':
 		animation_ongoing=0;
-				
 		break;
+		
     }
 }
 
@@ -506,4 +994,3 @@ int main(int argc, char** argv){
     return 0;
     
 }
-
