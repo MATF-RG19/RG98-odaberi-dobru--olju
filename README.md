@@ -3,7 +3,7 @@ Odaberi dobru šolju
 
 
 ### :memo: Opis igre:
-Cilj igre je izabrati solju u koju nije upala otrovna bombona, otrovne bombone su bombone crvene boje a bombona roze boje nije otrovna.Nakon sto solje izmenjaju mesta, izabrati solju za koju smatrate da ne sadrzi otrovnu bombonu.Ukoluko se covek onesvesti pogresili ste, ako vam se nasmeje izabrali ste pravu solju
+Cilj igre je izabrati solju u koju nije upala otrovna bombona, otrovne bombone su bombone crvene boje, a bombona roze boje nije otrovna.Nakon sto solje izmenjaju mesta, izabrati solju za koju smatrate da ne sadrzi otrovnu bombonu.Ukoluko se covek onesvesti pogresili ste, ako vam se nasmeje izabrali ste pravu solju
 
 ### :video_game: Kontrole:
 <kbd>g</kbd> pokretanje igrice <br>
