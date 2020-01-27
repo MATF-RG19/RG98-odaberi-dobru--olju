@@ -3,8 +3,8 @@ CC        = gcc
 CFLAGS    = -g -Wall
 LDFLAGS   = -lGL -lGLU -lglut -lm
 
-$(PROGRAM): main.o
-	$(CC) -o $(PROGRAM) main.o $(LDFLAGS)
+$(PROGRAM): main.o draw.o
+	$(CC) -o $(PROGRAM) main.o draw.o $(LDFLAGS)
 
 .PHONY: clean dist run
 
